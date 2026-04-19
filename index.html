@@ -196,6 +196,7 @@ body {
 .app-radio { background:linear-gradient(135deg,#4a2080,#8e44ad); }
 .app-profile { background:linear-gradient(135deg,#7b0000,#c0392b); }
 .app-pair { background:linear-gradient(135deg,#8b004a,#e91e8c); }
+.app-news { background:linear-gradient(135deg,#d35400,#e67e22); }
 
 .app-label { font-size:12px;color:rgba(255,255,255,0.8);font-weight:500;text-align:center; }
 
@@ -219,6 +220,68 @@ body {
 .home-indicator {
   position:absolute;bottom:10px;left:50%;transform:translateX(-50%);
   width:134px;height:5px;background:rgba(255,255,255,0.3);border-radius:3px;
+}
+
+/* ─── PHOTO GALLERY ─── */
+#photo-gallery {
+  position:absolute;inset:0;background:#000;
+  transform:translateX(100%);
+  transition:transform 0.35s cubic-bezier(0.4,0,0.2,1);
+  z-index:50;
+  pointer-events:none;
+  display:flex;flex-direction:column;
+}
+#photo-gallery.open {
+  transform:translateX(0);
+  pointer-events:all;
+}
+
+.gallery-nav {
+  background:rgba(0,0,0,0.95);
+  backdrop-filter:blur(20px);
+  padding:56px 18px 12px;
+  border-bottom:1px solid rgba(255,255,255,0.1);
+  display:flex;align-items:center;
+  flex-shrink:0;
+  position:relative;
+}
+.gallery-nav-title {
+  font-size:17px;font-weight:600;color:#fff;width:100%;text-align:center;
+}
+
+.gallery-body {
+  flex:1;overflow-y:auto;padding:10px;
+  display:grid;
+  grid-template-columns:1fr;
+  gap:10px;
+  align-content:start;
+}
+.gallery-body::-webkit-scrollbar { display:none; }
+
+.gallery-photo {
+  width:100%;
+  border-radius:12px;
+  overflow:hidden;
+  background:rgba(255,255,255,0.05);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.gallery-photo img {
+  width:100%;
+  height:auto;
+  display:block;
+}
+.gallery-placeholder {
+  width:100%;
+  aspect-ratio:1216/832;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:rgba(255,255,255,0.3);
+  font-size:14px;
+  border:2px dashed rgba(255,255,255,0.1);
+  border-radius:12px;
 }
 
 /* ─── APP SCREENS ─── */
@@ -457,6 +520,156 @@ body {
 
 .home-indicator { position:absolute;bottom:10px;left:50%;transform:translateX(-50%);width:134px;height:5px;background:rgba(255,255,255,0.3);border-radius:3px; }
 
+/* ── 뉴스 App ── */
+#app-news {
+  background:#0d0805;display:flex;flex-direction:column;
+}
+
+.news-list { 
+  flex:1;overflow-y:auto;padding:10px 0; 
+}
+.news-list::-webkit-scrollbar { display:none; }
+
+.news-item {
+  padding:16px 18px;
+  border-bottom:1px solid rgba(255,255,255,0.06);
+  transition:background 0.1s;
+}
+.news-item.clickable {
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+.news-item.clickable:active { background:rgba(255,255,255,0.05); }
+.news-item.disabled { opacity:0.4; }
+
+.news-emoji { font-size:18px; margin-bottom:8px; }
+.news-headline { 
+  font-size:16px;
+  font-weight:700;
+  color:#fff;
+  line-height:1.4;
+  margin-bottom:6px;
+}
+.news-meta { 
+  font-size:12px;
+  color:rgba(255,255,255,0.4);
+}
+
+/* ── 뉴스 상세 화면 ── */
+#app-news-detail {
+  background:#0d0805;
+  display:flex;flex-direction:column;
+  position:absolute;inset:0;
+  transform:translateX(100%);
+  transition:transform 0.35s cubic-bezier(0.4,0,0.2,1);
+  z-index:110;
+  pointer-events:none;
+}
+#app-news-detail.open { 
+  transform:translateX(0);
+  pointer-events:all; 
+}
+
+.news-detail-body {
+  flex:1;
+  overflow-y:auto;
+  padding:20px 18px 30px;
+}
+.news-detail-body::-webkit-scrollbar { display:none; }
+
+.news-detail-header {
+  margin-bottom:20px;
+  padding-bottom:16px;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+}
+.news-detail-label {
+  display:inline-block;
+  background:rgba(255,60,60,0.2);
+  color:#ff5555;
+  font-size:11px;
+  font-weight:700;
+  padding:4px 10px;
+  border-radius:6px;
+  letter-spacing:0.5px;
+  margin-bottom:12px;
+}
+.news-detail-headline {
+  font-size:22px;
+  font-weight:800;
+  color:#fff;
+  line-height:1.3;
+  margin-bottom:10px;
+}
+.news-detail-meta {
+  font-size:12px;
+  color:rgba(255,255,255,0.4);
+}
+
+.news-section {
+  margin-bottom:24px;
+}
+.news-section-title {
+  font-size:16px;
+  font-weight:700;
+  color:#ff8888;
+  margin-bottom:12px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.news-section-body {
+  font-size:14px;
+  line-height:1.7;
+  color:rgba(255,255,255,0.75);
+}
+.news-section-body ul {
+  list-style:none;
+  padding:0;
+  margin:8px 0;
+}
+.news-section-body li {
+  padding:6px 0 6px 20px;
+  position:relative;
+}
+.news-section-body li::before {
+  content:'•';
+  position:absolute;
+  left:6px;
+  color:rgba(255,100,100,0.6);
+}
+
+.news-alert-box {
+  background:rgba(255,60,60,0.1);
+  border:1px solid rgba(255,60,60,0.3);
+  border-radius:12px;
+  padding:14px;
+  margin-top:12px;
+}
+.news-alert-title {
+  font-size:13px;
+  font-weight:700;
+  color:#ff5555;
+  margin-bottom:8px;
+  letter-spacing:0.3px;
+}
+.news-alert-list {
+  list-style:none;
+  padding:0;
+  margin:0;
+  font-size:13px;
+  line-height:1.6;
+  color:rgba(255,255,255,0.7);
+}
+.news-alert-list li {
+  padding:4px 0 4px 16px;
+  position:relative;
+}
+.news-alert-list li::before {
+  content:'−';
+  position:absolute;
+  left:2px;
+  color:rgba(255,100,100,0.7);
+}
 
 </style>
 </head>
@@ -576,6 +789,12 @@ body {
           <div class="app-label">페어</div>
         </div>
 
+        <!-- 뉴스 -->
+        <div class="app-icon-wrap" id="open-news">
+          <div class="app-icon app-news">📰</div>
+          <div class="app-label">뉴스</div>
+        </div>
+
       </div>
     </div>
 
@@ -587,6 +806,18 @@ body {
       </div>
     </div>
     <div class="home-indicator"></div>
+  </div>
+
+  <!-- ══ PHOTO GALLERY ══ -->
+  <div id="photo-gallery">
+    <div class="gallery-nav">
+      <button class="back-btn" id="back-from-gallery">‹ 뒤로</button>
+      <div class="gallery-nav-title">사진</div>
+    </div>
+    <div class="gallery-body" id="gallery-body">
+      <!-- 사진이 추가될 공간 -->
+      <div class="gallery-placeholder">사진을 추가하세요 (1216×832 or 832×1216)</div>
+    </div>
   </div>
 
   <!-- ══ APP: 무선 통신 ══ -->
@@ -784,6 +1015,20 @@ body {
         <div class="profile-desc">자신을 내던지는 위태로운 이타주의자. 과거의 일을 겪고 난 이후, 탈영함. 현재는 감염자로 오인.</div>
       </div>
 
+      <div class="profile-card" data-id="ha">
+        <div class="profile-card-header">
+          <div class="profile-card-left">
+            <div class="profile-avatar" style="background:linear-gradient(135deg,#d4af37,#c9a000)">하</div>
+            <div>
+              <div class="profile-name">하지은</div>
+              <div class="profile-rank">상사</div>
+            </div>
+          </div>
+          <div class="profile-chevron">›</div>
+        </div>
+        <div class="profile-desc">올바르게 살고 싶었던 현실주의자. 동료의 사살을 원치 않았지만, '감염자'라는 낙인이 붙은 그녀는 사살하는 게 옳은 행동이라고 생각함.</div>
+      </div>
+
       <div class="profile-card" data-id="yeon">
         <div class="profile-card-header">
           <div class="profile-card-left">
@@ -837,6 +1082,116 @@ body {
       <div class="pair-char-card">
         <div class="pair-char-name">🩹 서아영</div>
         <div class="pair-char-body">갈색 단발과 녹색 눈을 가진 슬렌더 체형으로 군인답게 단단한 인상을 준다. 겉보기에는 마른 편이지만 가까이서 보면 실전에서 단련된 근육이 느껴진다.<br><br>밝고 다정한 태도로 사람들을 대하지만 보이지 않는 거리감을 두는 편이다. 타인을 돕는 데 주저하지 않으며 자신의 위험을 감수하는 이타적인 성향을 지녔다.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ APP: 뉴스 ══ -->
+  <div class="app-screen" id="app-news">
+    <div class="app-nav" style="background:rgba(13,8,5,0.97);">
+      <button class="back-btn" id="back-from-news">‹ 뒤로</button>
+      <div class="app-nav-title">뉴스</div>
+    </div>
+    <div class="news-list">
+      
+      <div class="news-item clickable" id="open-fog-news">
+        <div class="news-emoji">🌫️</div>
+        <div class="news-headline">21개국서 '광증 안개' 발생… 감염자 폭력 사태 확산</div>
+        <div class="news-meta">20■■년 ■■월 ■■일 | 긴급 속보</div>
+      </div>
+
+      <div class="news-item disabled">
+        <div class="news-emoji">🏛️</div>
+        <div class="news-headline">정부, 감염자 즉시 사살 지침 발표… 격리 절차 생략</div>
+        <div class="news-meta">20■■년 ■■월 ■■일</div>
+      </div>
+
+      <div class="news-item disabled">
+        <div class="news-emoji">⚕️</div>
+        <div class="news-headline">WHO "광증 안개 감염 경로 미확인… 치료법 부재"</div>
+        <div class="news-meta">20■■년 ■■월 ■■일</div>
+      </div>
+
+      <div class="news-item disabled">
+        <div class="news-emoji">🚨</div>
+        <div class="news-headline">서울 시내 집단 폭력 사건 속출… 군 병력 긴급 투입</div>
+        <div class="news-meta">20■■년 ■■월 ■■일</div>
+      </div>
+
+      <div class="news-item disabled">
+        <div class="news-emoji">🛡️</div>
+        <div class="news-headline">국방부 "통제 구역 확대… 민간인 외출 금지"</div>
+        <div class="news-meta">20■■년 ■■월 ■■일</div>
+      </div>
+
+      <div class="news-item disabled">
+        <div class="news-emoji">🌍</div>
+        <div class="news-headline">유럽·아시아 주요 도시 교통 마비… 공항 폐쇄</div>
+        <div class="news-meta">20■■년 ■■월 ■■일</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ APP: 뉴스 상세 (광증 안개) ══ -->
+  <div class="app-screen" id="app-news-detail">
+    <div class="app-nav" style="background:rgba(13,8,5,0.97);">
+      <button class="back-btn" id="back-from-news-detail">‹ 뒤로</button>
+      <div class="app-nav-title">뉴스 상세</div>
+    </div>
+    <div class="news-detail-body">
+      
+      <div class="news-detail-header">
+        <div class="news-detail-label">긴급 뉴스 속보</div>
+        <div class="news-detail-headline">🌫️ 21개국서 '광증 안개' 발생… 감염자 폭력 사태 확산</div>
+        <div class="news-detail-meta">[20■■년 ■■월 ■■일 | 본사 특별취재팀]</div>
+      </div>
+
+      <div class="news-section">
+        <div class="news-section-body">
+전 세계적으로 정체불명의 안개로 인한 폭력 사태가 급속히 확산되고 있다. 오늘 오전부터 최소 21개국에서 '광증 안개(Madness Fog)'로 불리는 현상에 따른 이상 행동 및 집단 폭력 사건이 보고되었다.
+<br><br>
+보건당국은 안개의 정확한 기원을 파악하지 못한 상태이며, 현재까지 알려진 공식 치료법은 존재하지 않는다.
+        </div>
+      </div>
+
+      <div class="news-section">
+        <div class="news-section-title">🧠 감염 증상: 인지 저하 → 신체 변이 → 폭력성 극대화 (폭주)</div>
+        <div class="news-section-body">
+전문가들에 따르면, 안개에 일정 시간 이상 노출된 피해자는 다음과 같은 증상을 순차적으로 겪는 것으로 나타났다.
+          <ul>
+            <li><strong>초기:</strong> 환청, 환각, 방향 감각 상실</li>
+            <li><strong>중기:</strong> 판단력 및 인지 능력 저하</li>
+            <li><strong>말기:</strong> 신체 기능 과도 활성화 및 공격성 극대화 (폭주 상태)</li>
+          </ul>
+감염자는 타인을 인지하지 못한 채, 반복적이고 비이성적인 공격 행동을 보인다. 일부 사례에서는 신체 일부의 변형도 관찰되었다.
+        </div>
+      </div>
+
+      <div class="news-section">
+        <div class="news-section-title">🚫 정부, 감염자 즉시 사살 지시… 격리 절차 생략</div>
+        <div class="news-section-body">
+정부는 오늘 새벽, 감염자 의심자에 대한 '즉각 사살 지침'을 공식 발표했다. 해당 조치는 기존의 격리 및 진단 절차를 생략하며, 군 병력이 직접 감염자 색출 작전에 투입되고 있다.
+<br><br>
+국방부는 "통제 구역을 중심으로 작전을 확대 중이며, 민간인 피해 최소화를 위해 국민의 협조가 절실하다"고 전했다.
+        </div>
+      </div>
+
+      <div class="news-section">
+        <div class="news-section-title">📢 시민 행동 수칙</div>
+        <div class="news-alert-box">
+          <div class="news-alert-title">⚠️ 필수 안전 수칙</div>
+          <ul class="news-alert-list">
+            <li>실외 이동 시 'N-95 이상급 방진 마스크 착용 필수'</li>
+            <li>가시 거리 저하 지역 접근 금지</li>
+            <li>의심 증상 발생 시 '즉시 자택 격리' 후 신고</li>
+            <li>감염자와 접촉 시 도주하거나 숨지 말고 '112 또는 군 당국에 신고'</li>
+          </ul>
+        </div>
+        <div class="news-section-body" style="margin-top:12px">
+자세한 내용은 공식 채널을 통해 정보를 확인하고 불필요한 외출을 삼가길 바랍니다.
+        </div>
       </div>
 
     </div>
@@ -973,6 +1328,42 @@ document.querySelectorAll('.key').forEach(key => {
   });
 });
 
+/* ─── GALLERY SWIPE ─── */
+let homeSwipeStartX = null;
+const homeScreen = document.getElementById('home-screen');
+const photoGallery = document.getElementById('photo-gallery');
+
+homeScreen.addEventListener('touchstart', e => {
+  homeSwipeStartX = e.touches[0].clientX;
+});
+homeScreen.addEventListener('touchend', e => {
+  if (homeSwipeStartX !== null) {
+    const dx = homeSwipeStartX - e.changedTouches[0].clientX;
+    if (dx > 80) { // swipe left
+      photoGallery.classList.add('open');
+    }
+    homeSwipeStartX = null;
+  }
+});
+
+// Mouse support for desktop
+homeScreen.addEventListener('mousedown', e => {
+  homeSwipeStartX = e.clientX;
+});
+homeScreen.addEventListener('mouseup', e => {
+  if (homeSwipeStartX !== null) {
+    const dx = homeSwipeStartX - e.clientX;
+    if (dx > 80) {
+      photoGallery.classList.add('open');
+    }
+    homeSwipeStartX = null;
+  }
+});
+
+document.getElementById('back-from-gallery').addEventListener('click', () => {
+  photoGallery.classList.remove('open');
+});
+
 /* ─── APP OPEN/CLOSE ─── */
 function openApp(id) {
   document.getElementById(id).classList.add('open');
@@ -981,7 +1372,7 @@ function closeApp(id) {
   document.getElementById(id).classList.remove('open');
 }
 function closeAllApps() {
-  ['app-messages','app-convo','app-stats','app-radio','app-profile','app-pair'].forEach(closeApp);
+  ['app-messages','app-convo','app-stats','app-radio','app-profile','app-pair','app-news','app-news-detail'].forEach(closeApp);
 }
 
 document.getElementById('open-messages').addEventListener('click', ()=>openApp('app-messages'));
@@ -999,6 +1390,12 @@ document.getElementById('back-from-profile').addEventListener('click', () => clo
 
 document.getElementById('open-pair').addEventListener('click', () => { openApp('app-pair'); loadPairDday(); });
 document.getElementById('back-from-pair').addEventListener('click', () => closeApp('app-pair'));
+
+document.getElementById('open-news').addEventListener('click', () => openApp('app-news'));
+document.getElementById('back-from-news').addEventListener('click', () => closeApp('app-news'));
+
+document.getElementById('open-fog-news').addEventListener('click', () => openApp('app-news-detail'));
+document.getElementById('back-from-news-detail').addEventListener('click', () => closeApp('app-news-detail'));
 
 // Profile card toggle
 document.querySelectorAll('.profile-card').forEach(card => {
@@ -1077,4 +1474,4 @@ document.getElementById('refresh-stats').addEventListener('click', ()=>{
 
 </script>
 </body>
-</html>
+      </html>
