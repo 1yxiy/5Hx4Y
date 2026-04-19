@@ -197,6 +197,7 @@ body {
 .app-profile { background:linear-gradient(135deg,#7b0000,#c0392b); }
 .app-pair { background:linear-gradient(135deg,#8b004a,#e91e8c); }
 .app-news { background:linear-gradient(135deg,#d35400,#e67e22); }
+.app-photos { background:linear-gradient(135deg,#2196F3,#1976D2); }
 
 .app-label { font-size:12px;color:rgba(255,255,255,0.8);font-weight:500;text-align:center; }
 
@@ -220,68 +221,6 @@ body {
 .home-indicator {
   position:absolute;bottom:10px;left:50%;transform:translateX(-50%);
   width:134px;height:5px;background:rgba(255,255,255,0.3);border-radius:3px;
-}
-
-/* ─── PHOTO GALLERY ─── */
-#photo-gallery {
-  position:absolute;inset:0;background:#000;
-  transform:translateX(100%);
-  transition:transform 0.35s cubic-bezier(0.4,0,0.2,1);
-  z-index:50;
-  pointer-events:none;
-  display:flex;flex-direction:column;
-}
-#photo-gallery.open {
-  transform:translateX(0);
-  pointer-events:all;
-}
-
-.gallery-nav {
-  background:rgba(0,0,0,0.95);
-  backdrop-filter:blur(20px);
-  padding:56px 18px 12px;
-  border-bottom:1px solid rgba(255,255,255,0.1);
-  display:flex;align-items:center;
-  flex-shrink:0;
-  position:relative;
-}
-.gallery-nav-title {
-  font-size:17px;font-weight:600;color:#fff;width:100%;text-align:center;
-}
-
-.gallery-body {
-  flex:1;overflow-y:auto;padding:10px;
-  display:grid;
-  grid-template-columns:1fr;
-  gap:10px;
-  align-content:start;
-}
-.gallery-body::-webkit-scrollbar { display:none; }
-
-.gallery-photo {
-  width:100%;
-  border-radius:12px;
-  overflow:hidden;
-  background:rgba(255,255,255,0.05);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-.gallery-photo img {
-  width:100%;
-  height:auto;
-  display:block;
-}
-.gallery-placeholder {
-  width:100%;
-  aspect-ratio:1216/832;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:rgba(255,255,255,0.3);
-  font-size:14px;
-  border:2px dashed rgba(255,255,255,0.1);
-  border-radius:12px;
 }
 
 /* ─── APP SCREENS ─── */
@@ -671,6 +610,48 @@ body {
   color:rgba(255,100,100,0.7);
 }
 
+/* ── 사진 App ── */
+#app-photos {
+  background:#000;display:flex;flex-direction:column;
+}
+
+.photos-body {
+  flex:1;
+  overflow-y:auto;
+  padding:10px;
+  display:grid;
+  grid-template-columns:1fr;
+  gap:10px;
+  align-content:start;
+}
+.photos-body::-webkit-scrollbar { display:none; }
+
+.photo-item {
+  width:100%;
+  border-radius:12px;
+  overflow:hidden;
+  background:rgba(255,255,255,0.05);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.photo-item img {
+  width:100%;
+  height:auto;
+  display:block;
+}
+.photo-placeholder {
+  width:100%;
+  aspect-ratio:1216/832;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:rgba(255,255,255,0.3);
+  font-size:14px;
+  border:2px dashed rgba(255,255,255,0.1);
+  border-radius:12px;
+}
+
 </style>
 </head>
 <body>
@@ -795,6 +776,12 @@ body {
           <div class="app-label">뉴스</div>
         </div>
 
+        <!-- 사진 -->
+        <div class="app-icon-wrap" id="open-photos">
+          <div class="app-icon app-photos">🖼️</div>
+          <div class="app-label">사진</div>
+        </div>
+
       </div>
     </div>
 
@@ -806,18 +793,6 @@ body {
       </div>
     </div>
     <div class="home-indicator"></div>
-  </div>
-
-  <!-- ══ PHOTO GALLERY ══ -->
-  <div id="photo-gallery">
-    <div class="gallery-nav">
-      <button class="back-btn" id="back-from-gallery">‹ 뒤로</button>
-      <div class="gallery-nav-title">사진</div>
-    </div>
-    <div class="gallery-body" id="gallery-body">
-      <!-- 사진이 추가될 공간 -->
-      <div class="gallery-placeholder">사진을 추가하세요 (1216×832 or 832×1216)</div>
-    </div>
   </div>
 
   <!-- ══ APP: 무선 통신 ══ -->
@@ -1197,6 +1172,18 @@ body {
     </div>
   </div>
 
+  <!-- ══ APP: 사진 ══ -->
+  <div class="app-screen" id="app-photos">
+    <div class="app-nav" style="background:rgba(0,0,0,0.95);">
+      <button class="back-btn" id="back-from-photos">‹ 뒤로</button>
+      <div class="app-nav-title">사진</div>
+    </div>
+    <div class="photos-body" id="photos-body">
+      <!-- 사진이 추가될 공간 -->
+      <div class="photo-placeholder">사진을 추가하세요 (1216×832 or 832×1216)</div>
+    </div>
+  </div>
+
 </div><!-- /.iphone -->
 
 <script>
@@ -1328,42 +1315,6 @@ document.querySelectorAll('.key').forEach(key => {
   });
 });
 
-/* ─── GALLERY SWIPE ─── */
-let homeSwipeStartX = null;
-const homeScreen = document.getElementById('home-screen');
-const photoGallery = document.getElementById('photo-gallery');
-
-homeScreen.addEventListener('touchstart', e => {
-  homeSwipeStartX = e.touches[0].clientX;
-});
-homeScreen.addEventListener('touchend', e => {
-  if (homeSwipeStartX !== null) {
-    const dx = homeSwipeStartX - e.changedTouches[0].clientX;
-    if (dx > 80) { // swipe left
-      photoGallery.classList.add('open');
-    }
-    homeSwipeStartX = null;
-  }
-});
-
-// Mouse support for desktop
-homeScreen.addEventListener('mousedown', e => {
-  homeSwipeStartX = e.clientX;
-});
-homeScreen.addEventListener('mouseup', e => {
-  if (homeSwipeStartX !== null) {
-    const dx = homeSwipeStartX - e.clientX;
-    if (dx > 80) {
-      photoGallery.classList.add('open');
-    }
-    homeSwipeStartX = null;
-  }
-});
-
-document.getElementById('back-from-gallery').addEventListener('click', () => {
-  photoGallery.classList.remove('open');
-});
-
 /* ─── APP OPEN/CLOSE ─── */
 function openApp(id) {
   document.getElementById(id).classList.add('open');
@@ -1372,7 +1323,7 @@ function closeApp(id) {
   document.getElementById(id).classList.remove('open');
 }
 function closeAllApps() {
-  ['app-messages','app-convo','app-stats','app-radio','app-profile','app-pair','app-news','app-news-detail'].forEach(closeApp);
+  ['app-messages','app-convo','app-stats','app-radio','app-profile','app-pair','app-news','app-news-detail','app-photos'].forEach(closeApp);
 }
 
 document.getElementById('open-messages').addEventListener('click', ()=>openApp('app-messages'));
@@ -1396,6 +1347,9 @@ document.getElementById('back-from-news').addEventListener('click', () => closeA
 
 document.getElementById('open-fog-news').addEventListener('click', () => openApp('app-news-detail'));
 document.getElementById('back-from-news-detail').addEventListener('click', () => closeApp('app-news-detail'));
+
+document.getElementById('open-photos').addEventListener('click', () => openApp('app-photos'));
+document.getElementById('back-from-photos').addEventListener('click', () => closeApp('app-photos'));
 
 // Profile card toggle
 document.querySelectorAll('.profile-card').forEach(card => {
@@ -1474,4 +1428,4 @@ document.getElementById('refresh-stats').addEventListener('click', ()=>{
 
 </script>
 </body>
-      </html>
+</html>
