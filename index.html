@@ -932,6 +932,68 @@ body {
             <span style="font-size: 11px; color: #6c7a89;">&gt;&gt; CONNECTION TERMINATED_</span>
         </div>
 
+    <br>
+
+<div id="radio-wave" style="
+  font-family: 'Lucida Console', monospace;
+  color: #7CFC00;
+  font-size: 14px;
+  letter-spacing: 2px;
+  margin-top: 10px;
+  opacity: 0.9;
+">
+  ၊၊||၊|။||||။၊|။
+</div>
+
+<div style="margin-top:12px; text-align:center;">
+  <button style="
+    background:#0b1a12;
+    border:1px solid #2a5a2a;
+    color:#7CFC00;
+    padding:8px 18px;
+    font-family:monospace;
+    cursor:pointer;
+    box-shadow:0 0 6px rgba(0,255,0,0.3);
+  ">
+    📡 무전 하기
+  </button>
+</div>
+
+<script>
+const waveEl = document.getElementById("radio-wave");
+
+// 사용할 문자 (요청하신 스타일)
+const chars = ["၊", "|", "။"];
+
+let current = "၊၊||၊|။||||။၊|။";
+
+function generateWave() {
+  let result = "";
+
+  for (let i = 0; i < current.length; i++) {
+    if (Math.random() < 0.8) {
+      // 대부분 유지 (안정감)
+      result += current[i];
+    } else {
+      // 일부만 변형
+      result += chars[Math.floor(Math.random() * chars.length)];
+    }
+  }
+
+  current = result;
+
+  // 가끔 무전 잡음 추가
+  if (Math.random() < 0.12) {
+    result = "… " + result + " …";
+  }
+
+  waveEl.textContent = result;
+}
+
+// ❗ 느리게 (중요)
+setInterval(generateWave, 300);
+</script>
+
       </div>
     </div>
   </div>
